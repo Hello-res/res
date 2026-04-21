@@ -210,6 +210,29 @@ button:disabled {
   line-height: 1.5;
 }
 
+.manual-ai-box {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px dashed rgba(94, 76, 56, 0.28);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.manual-ai-header {
+  margin-bottom: 12px;
+}
+
+.manual-ai-header h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.manual-ai-header p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .output-panel {
   margin-top: 20px;
   padding: 22px;

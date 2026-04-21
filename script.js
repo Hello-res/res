@@ -3,11 +3,14 @@ const modelInput = document.getElementById("model");
 const generateButton = document.getElementById("generateButton");
 const downloadButton = document.getElementById("downloadButton");
 const copyButton = document.getElementById("copyButton");
+const copyPromptButton = document.getElementById("copyPromptButton");
+const usePastedJsonButton = document.getElementById("usePastedJsonButton");
 const latexOutput = document.getElementById("latexOutput");
 const statusBox = document.getElementById("status");
 const fitScore = document.getElementById("fitScore");
 const fitReason = document.getElementById("fitReason");
 const honestyNotes = document.getElementById("honestyNotes");
+const manualJsonInput = document.getElementById("manualJson");
 
 const fields = {
   candidateName: document.getElementById("candidateName"),
@@ -360,6 +363,81 @@ function getFormData() {
   );
 }
 
+function buildManualPrompt(formData) {
+  return [
+    "Create a tailored resume in strict JSON only.",
+    "Do not add markdown fences.",
+    "Do not invent skills, employers, titles, dates, education, certifications, projects, or metrics.",
+    "Use only what appears in the base resume, explicit personal details, or the explicit real skills list.",
+    "If the candidate lacks a required skill, include that gap in honesty_notes.",
+    "",
+    "Return JSON with this shape:",
+    JSON.stringify(
+      {
+        name: "string",
+        contact_lines: ["string"],
+        headline: "string",
+        summary: ["string"],
+        matched_skills: ["string"],
+        supporting_skills: ["string"],
+        experience: [
+          {
+            company: "string",
+            title: "string",
+            dates: "string",
+            location: "string",
+            bullets: ["string"]
+          }
+        ],
+        projects: [
+          {
+            name: "string",
+            subtitle: "string",
+            bullets: ["string"]
+          }
+        ],
+        education: [
+          {
+            institution: "string",
+            degree: "string",
+            dates: "string",
+            location: "string",
+            highlights: ["string"]
+          }
+        ],
+        certifications: ["string"],
+        fit_score_estimate: 0,
+        fit_reasoning: "string",
+        honesty_notes: ["string"]
+      },
+      null,
+      2
+    ),
+    "",
+    "PERSONAL DETAILS",
+    `name: ${formData.candidateName}`,
+    `email: ${formData.email}`,
+    `phone: ${formData.phone}`,
+    `location: ${formData.location}`,
+    `links: ${formData.links}`,
+    "",
+    "REAL SKILLS",
+    formData.realSkills,
+    "",
+    "BASE RESUME",
+    formData.baseResume,
+    "",
+    "TARGET ROLE",
+    formData.targetRole,
+    "",
+    "JOB DESCRIPTION",
+    formData.jobDescription,
+    "",
+    "EXTRA DETAILS",
+    formData.extraDetails
+  ].join("\n");
+}
+
 function saveFormData() {
   localStorage.setItem(storageKeys.model, modelInput.value.trim());
   Object.entries(fields).forEach(([key, element]) => {
@@ -551,6 +629,49 @@ function handleSuccessfulPayload(payload, formData) {
   setStatus("Resume generated. You can download the .tex file or copy the LaTeX below.");
 }
 
+function applyManualJson() {
+  const formData = getFormData();
+  const rawJson = manualJsonInput.value.trim();
+
+  if (!rawJson) {
+    setStatus("Paste the JSON output from ChatGPT first.", true);
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(rawJson);
+    const normalized = normalizeResume(parsed, formData);
+    currentLatex = renderLatex(normalized);
+    latexOutput.textContent = currentLatex;
+    fitScore.textContent = `Fit: ${normalized.fit_score_estimate}%`;
+    fitReason.textContent = normalized.fit_reasoning || "Loaded from pasted JSON.";
+    updateNotes(normalized.honesty_notes);
+    downloadButton.disabled = false;
+    copyButton.disabled = false;
+    setStatus("Pasted JSON accepted. LaTeX is ready below.");
+  } catch (error) {
+    console.error(error);
+    setStatus("The pasted content is not valid JSON in the expected format.", true);
+  }
+}
+
+async function copyManualPrompt() {
+  const formData = getFormData();
+
+  if (!formData.realSkills || !formData.baseResume || !formData.jobDescription) {
+    setStatus("Fill in real skills, base resume, and job description before copying the prompt.", true);
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(buildManualPrompt(formData));
+    setStatus("Prompt copied. Paste it into ChatGPT, then paste the JSON response back here.");
+  } catch (error) {
+    console.error(error);
+    setStatus("Could not copy the prompt from this browser.", true);
+  }
+}
+
 function downloadLatex() {
   if (!currentLatex) {
     return;
@@ -585,6 +706,8 @@ restoreFormData();
 generateButton.addEventListener("click", generateResume);
 downloadButton.addEventListener("click", downloadLatex);
 copyButton.addEventListener("click", copyLatex);
+copyPromptButton.addEventListener("click", copyManualPrompt);
+usePastedJsonButton.addEventListener("click", applyManualJson);
 
 Object.values(fields).forEach((element) => {
   element.addEventListener("input", saveFormData);

@@ -93,6 +93,23 @@
           <button id="copyButton" class="secondary-button" type="button" disabled>Copy LaTeX</button>
         </div>
 
+        <div class="manual-ai-box">
+          <div class="manual-ai-header">
+            <h3>Free ChatGPT Fallback</h3>
+            <p>
+              If you do not want to use an API key, copy the prompt below into ChatGPT manually, then paste the JSON response here.
+            </p>
+          </div>
+          <div class="actions">
+            <button id="copyPromptButton" class="secondary-button" type="button">Copy Prompt</button>
+            <button id="usePastedJsonButton" class="secondary-button" type="button">Use Pasted JSON</button>
+          </div>
+          <label>
+            <span class="field-label">Paste JSON from ChatGPT</span>
+            <textarea id="manualJson" rows="10" placeholder='Paste the JSON response from ChatGPT here, then click "Use Pasted JSON".'></textarea>
+          </label>
+        </div>
+
         <div id="status" class="status" aria-live="polite">
           Enter your API key and inputs, then generate.
         </div>
