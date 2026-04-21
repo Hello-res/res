@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Resume Builder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">LaTeX Resume Builder</p>
+        <h1>Tailor a truthful resume to a JD</h1>
+        <p class="subcopy">
+          Paste your real resume and skills on the left, the target job on the right, then generate a LaTeX resume you can download.
+        </p>
+      </div>
+      <div class="api-panel">
+        <label class="field-label" for="apiKey">OpenAI API Key</label>
+        <input id="apiKey" class="top-input" type="password" placeholder="sk-..." autocomplete="off">
+        <label class="field-label" for="model">Model</label>
+        <input id="model" class="top-input" type="text" value="gpt-4.1-mini" autocomplete="off">
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Original Resume / Skills</h2>
+          <p>Keep this truthful. The generator should only emphasize what you genuinely have.</p>
+        </div>
+
+        <div class="input-grid compact-grid">
+          <label>
+            <span class="field-label">Full Name</span>
+            <input id="candidateName" type="text" placeholder="Alex Carter">
+          </label>
+          <label>
+            <span class="field-label">Email</span>
+            <input id="email" type="email" placeholder="alex@example.com">
+          </label>
+          <label>
+            <span class="field-label">Phone</span>
+            <input id="phone" type="text" placeholder="+1 555 010 1234">
+          </label>
+          <label>
+            <span class="field-label">Location</span>
+            <input id="location" type="text" placeholder="Seattle, WA">
+          </label>
+        </div>
+
+        <label>
+          <span class="field-label">Links</span>
+          <textarea id="links" rows="4" placeholder="LinkedIn, GitHub, portfolio. One per line."></textarea>
+        </label>
+
+        <label>
+          <span class="field-label">Real Skills</span>
+          <textarea id="realSkills" rows="8" placeholder="Python, FastAPI, SQL, Docker, React, AWS..."></textarea>
+        </label>
+
+        <label>
+          <span class="field-label">Base Resume</span>
+          <textarea id="baseResume" rows="18" placeholder="Paste your current resume here in plain text or markdown."></textarea>
+        </label>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Target JD / Details</h2>
+          <p>Paste the job description and any extra guidance for tone or emphasis.</p>
+        </div>
+
+        <label>
+          <span class="field-label">Target Role</span>
+          <input id="targetRole" type="text" placeholder="Senior Backend Engineer">
+        </label>
+
+        <label>
+          <span class="field-label">Job Description</span>
+          <textarea id="jobDescription" rows="20" placeholder="Paste the full JD here."></textarea>
+        </label>
+
+        <label>
+          <span class="field-label">Extra Details</span>
+          <textarea id="extraDetails" rows="10" placeholder="Optional: preferred tone, key points to highlight, industries to lean into, geography, seniority, etc."></textarea>
+        </label>
+
+        <div class="actions">
+          <button id="generateButton" class="primary-button" type="button">Generate Resume</button>
+          <button id="downloadButton" class="secondary-button" type="button" disabled>Download .tex</button>
+          <button id="copyButton" class="secondary-button" type="button" disabled>Copy LaTeX</button>
+        </div>
+
+        <div id="status" class="status" aria-live="polite">
+          Enter your API key and inputs, then generate.
+        </div>
+      </section>
+    </main>
+
+    <section class="output-panel">
+      <div class="output-topline">
+        <div>
+          <p class="eyebrow">Output</p>
+          <h2>Generated LaTeX</h2>
+        </div>
+        <div class="meta">
+          <span id="fitScore" class="pill">Fit: --</span>
+          <span id="fitReason" class="meta-text">No resume generated yet.</span>
+        </div>
+      </div>
+
+      <div id="honestyNotes" class="notes hidden"></div>
+
+      <pre id="latexOutput" class="latex-output">Your generated LaTeX will appear here.</pre>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

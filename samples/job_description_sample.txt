@@ -1,0 +1,9 @@
+We are hiring a Software Engineer to build internal AI-powered workflow tools.
+
+Requirements:
+- 3+ years of software engineering experience
+- Strong Python skills
+- Experience with APIs and backend services
+- Familiarity with SQL databases
+- Experience working with product stakeholders
+- Nice to have: Docker, cloud deployment, internal tools, prompt engineering

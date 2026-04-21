@@ -1,0 +1,27 @@
+Alex Carter
+alex@example.com
++1 555 010 1234
+Seattle, WA
+LinkedIn: linkedin.com/in/alexcarter
+GitHub: github.com/alexcarter
+
+Senior Software Engineer with 6 years of experience building backend services, internal platforms, and data-driven web applications.
+
+Experience
+- Senior Software Engineer, Northwind Labs, 2022-Present
+  - Built Python and FastAPI services used by internal operations teams.
+  - Designed PostgreSQL schemas and optimized slow queries.
+  - Added Docker-based deployment workflows and CI checks.
+  - Partnered with product and design to deliver workflow automation features.
+
+- Software Engineer, Blue Harbor Tech, 2020-2022
+  - Built React dashboards for customer success teams.
+  - Integrated REST APIs and authored backend endpoints in Node.js.
+  - Improved reporting performance and fixed production bugs.
+
+Projects
+- Resume Keyword Analyzer
+  - Built a small NLP tool in Python to compare resumes against job descriptions.
+
+Education
+- B.S. in Computer Science, University of Washington, 2020

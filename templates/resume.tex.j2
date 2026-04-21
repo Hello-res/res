@@ -1,0 +1,99 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.55in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\pagenumbering{gobble}
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\setlist[itemize]{leftmargin=1.2em, topsep=2pt, itemsep=1pt}
+
+\begin{document}
+
+{\LARGE \textbf{ {{ resume.name | latex }} }}\\
+{% for line in resume.contact_lines %}
+{{ line | latex }}{% if not loop.last %} \quad | \quad {% endif %}
+{% endfor %}
+
+{% if resume.headline %}
+\vspace{0.2cm}
+{\large {{ resume.headline | latex }}}
+{% endif %}
+
+{% if resume.summary %}
+\section*{Professional Summary}
+\begin{itemize}
+{% for bullet in resume.summary %}
+  \item {{ bullet | latex }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+
+{% if resume.matched_skills or resume.supporting_skills %}
+\section*{Skills}
+{% if resume.matched_skills %}
+\textbf{Matched Skills:} {{ resume.matched_skills | join_latex }}\\
+{% endif %}
+{% if resume.supporting_skills %}
+\textbf{Supporting Skills:} {{ resume.supporting_skills | join_latex }}
+{% endif %}
+{% endif %}
+
+{% if resume.experience %}
+\section*{Experience}
+{% for item in resume.experience %}
+\textbf{ {{ item.title | latex }} }{% if item.company %} \hfill {{ item.company | latex }}{% endif %}\\
+{% if item.location or item.dates %}
+{{ item.location | latex }}{% if item.location and item.dates %} \hfill {% endif %}{{ item.dates | latex }}\\
+{% endif %}
+\begin{itemize}
+{% for bullet in item.bullets %}
+  \item {{ bullet | latex }}
+{% endfor %}
+\end{itemize}
+{% endfor %}
+{% endif %}
+
+{% if resume.projects %}
+\section*{Projects}
+{% for project in resume.projects %}
+\textbf{ {{ project.name | latex }} }{% if project.subtitle %} -- {{ project.subtitle | latex }}{% endif %}\\
+\begin{itemize}
+{% for bullet in project.bullets %}
+  \item {{ bullet | latex }}
+{% endfor %}
+\end{itemize}
+{% endfor %}
+{% endif %}
+
+{% if resume.education %}
+\section*{Education}
+{% for item in resume.education %}
+\textbf{ {{ item.degree | latex }} }{% if item.institution %} \hfill {{ item.institution | latex }}{% endif %}\\
+{% if item.location or item.dates %}
+{{ item.location | latex }}{% if item.location and item.dates %} \hfill {% endif %}{{ item.dates | latex }}\\
+{% endif %}
+{% if item.highlights %}
+\begin{itemize}
+{% for bullet in item.highlights %}
+  \item {{ bullet | latex }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if resume.certifications %}
+\section*{Certifications}
+\begin{itemize}
+{% for cert in resume.certifications %}
+  \item {{ cert | latex }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+
+\end{document}
