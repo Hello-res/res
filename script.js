@@ -172,6 +172,30 @@ function escapeHtml(value) {
   return Array.from(source, (character) => replacements[character] || character).join("");
 }
 
+async function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const helper = document.createElement("textarea");
+  helper.value = text;
+  helper.setAttribute("readonly", "");
+  helper.style.position = "fixed";
+  helper.style.top = "-1000px";
+  helper.style.left = "-1000px";
+  document.body.appendChild(helper);
+  helper.focus();
+  helper.select();
+
+  const successful = document.execCommand("copy");
+  document.body.removeChild(helper);
+
+  if (!successful) {
+    throw new Error("Copy command was blocked by the browser.");
+  }
+}
+
 function safeArray(value) {
   return Array.isArray(value) ? value.filter((item) => typeof item === "string" && item.trim()) : [];
 }
@@ -664,11 +688,11 @@ async function copyManualPrompt() {
   }
 
   try {
-    await navigator.clipboard.writeText(buildManualPrompt(formData));
+    await copyText(buildManualPrompt(formData));
     setStatus("Prompt copied. Paste it into ChatGPT, then paste the JSON response back here.");
   } catch (error) {
     console.error(error);
-    setStatus("Could not copy the prompt from this browser.", true);
+    setStatus("Could not copy automatically. Try serving the site with http://localhost:8000 instead of opening the file directly.", true);
   }
 }
 
@@ -693,11 +717,11 @@ async function copyLatex() {
   }
 
   try {
-    await navigator.clipboard.writeText(currentLatex);
+    await copyText(currentLatex);
     setStatus("LaTeX copied to clipboard.");
   } catch (error) {
     console.error(error);
-    setStatus("Could not copy LaTeX from this browser.", true);
+    setStatus("Could not copy automatically. Try serving the site with http://localhost:8000 instead of opening the file directly.", true);
   }
 }
 
